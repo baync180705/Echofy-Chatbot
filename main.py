@@ -104,6 +104,9 @@ def create_prompt(query_text, contexts):
         - **Respond in 2–3 short, clear sentences** forming a brief paragraph.
         - Your answer should be plain text—**never include the contexts or scores** in your response.
         - If the question is unrelated to MDG Space, respond with: "I can only provide information related to MDG Space. Please ask a question within this scope."
+        - If the question is related to MDG Space, the answer **must directly address it using the provided context**—no exceptions.
+        - The response **must always be confident** and **must never suggest uncertainty** or imply that it is "trying" to answer the question.
+        - **Hallucination is strictly prohibited**—only use the information available in the retrieved context.
 
         Here is the list of contexts with relevance scores:
 
