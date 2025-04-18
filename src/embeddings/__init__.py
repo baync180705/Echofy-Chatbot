@@ -1,0 +1,3 @@
+"""
+Text embedding models module.
+"""
