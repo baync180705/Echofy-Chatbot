@@ -66,7 +66,7 @@ git clone https://github.com/baync180705/Echofy-Chatbot.git
 # Using SSH
 git clone git@github.com:baync180705/Echofy-Chatbot.git
 
-cd echofy
+cd Echofy-Chatbot
 ```
 
 #### Create a Virtual Environment
