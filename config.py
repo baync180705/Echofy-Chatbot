@@ -7,6 +7,9 @@ load_dotenv()
 Configuration settings for the RAG system.
 """
 
+# Mode
+DEBUG = True
+
 # File paths
 CHROMA_PATH = "chroma"
 FAISS_INDEX_PATH = "faiss.index"
