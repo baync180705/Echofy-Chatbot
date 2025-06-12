@@ -3,7 +3,8 @@ LLM interaction for generating responses.
 """
 
 import requests
-from config import LLM_API_URL, LLM_MODEL, LLM_TEMPERATURE, LLM_TOP_P, LLM_TOP_K, LLM_MAX_TOKENS
+import json
+from config import LLM_API_URL, LLM_MODEL, LLM_TEMPERATURE, LLM_TOP_P, LLM_TOP_K, HEADERS
 
 
 def generate_response(prompt):
@@ -17,30 +18,33 @@ def generate_response(prompt):
         str: The generated response
     """
     try:
-        payload = {
+        # Prepare the payload containing Model Name, Prompt and other LLM Configurations
+        payload = json.dumps({
             "model": LLM_MODEL,
-            "prompt": prompt,
-            "stream": False,
+            "messages": [{
+                    "role": "user",
+                    "content": prompt
+                }],
             "temperature": LLM_TEMPERATURE,
             "top_p": LLM_TOP_P,
             "top_k": LLM_TOP_K,
-            "max_tokens": LLM_MAX_TOKENS,
-        }
+        })
         
-        result = requests.post(LLM_API_URL, json=payload, timeout=30)
-        
+        result = requests.post(url=LLM_API_URL, data=payload, headers=HEADERS) # Implements the API Call
+     
         # Check for HTTP errors
         result.raise_for_status()
         
         # Parse response
         response_json = result.json()
-        response_text = response_json.get('response')
+        response_text = response_json.get('choices')[0].get('message').get('content')
         
         if not response_text:
             print("Warning: Empty response received from LLM")
             
         return response_text
     
+    # Handling Exceptions 
     except requests.exceptions.HTTPError as e:
         print(f"HTTP error occurred: {e}")
         return f"Error generating response: HTTP error {e.response.status_code}"

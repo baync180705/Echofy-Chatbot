@@ -5,7 +5,6 @@ Main entry point for the RAG system.
 # Server setup libraries
 from fastapi import FastAPI as server, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # Configuration and utility libraries
@@ -40,7 +39,7 @@ def handleQuery(query: Query):
     try:
         response, contexts = orchestratePipeline(query_text=query.prompt)        
         
-        return JSONResponse({"response": response, "sources": contexts}), 200
+        return {"response": response, "sources": contexts, "status": 200}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
