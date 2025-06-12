@@ -12,8 +12,7 @@ DEBUG = True
 
 # File paths
 CHROMA_PATH = "chroma"
-FAISS_INDEX_PATH = "faiss.index"
-JSON_PATH = "docs/mdgspace_dataset.json"
+JSON_PATH = "dataset/mdgspace_dataset.json"
 
 # Embedding model configuration
 DEFAULT_EMBEDDING_MODEL = os.getenv("DEFAULT_EMBEDDING_MODEL")
@@ -31,7 +30,7 @@ LLM_TOP_P = 0.9
 LLM_TOP_K = 10
 
 # Retrieval configuration
-DEFAULT_RELEVANCE_THRESHOLD = 0.6
+DEFAULT_RELEVANCE_THRESHOLD = 0.5
 DEFAULT_RETRIEVAL_K = 10
 
 # Hugging Face Creds

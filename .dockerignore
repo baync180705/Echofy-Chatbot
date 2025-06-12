@@ -1,5 +1,4 @@
 venv/
 .env
-chroma
+chroma/
 __pyc*
-faiss.index

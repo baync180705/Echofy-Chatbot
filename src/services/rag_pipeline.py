@@ -1,10 +1,9 @@
 import json
 import os
 
-from config import CHROMA_PATH, DEFAULT_RELEVANCE_THRESHOLD, DEFAULT_RETRIEVAL_K, FAISS_INDEX_PATH
+from config import CHROMA_PATH, DEFAULT_RELEVANCE_THRESHOLD, DEFAULT_RETRIEVAL_K
 from src.data.loader import load_qa_pairs
 from src.retrieval.chroma_service import load_chroma, save_to_chroma
-from src.retrieval.faiss_service import save_to_faiss, search_faiss
 
 
 def initialize_database(embedding_function):
@@ -13,55 +12,29 @@ def initialize_database(embedding_function):
         os.makedirs(CHROMA_PATH)
         documents = load_qa_pairs()
         save_to_chroma(persist_directory=CHROMA_PATH, chunks=documents, embedding_function=embedding_function)
-        save_to_faiss(faiss_index_path=FAISS_INDEX_PATH, chunks=documents, embedding_function=embedding_function)
 
 
 def retrieve_contexts(query_text, embedding_function, k=DEFAULT_RETRIEVAL_K, threshold=DEFAULT_RELEVANCE_THRESHOLD):
     """Retrieve and filter relevant contexts for the query."""
-    # Load ChromaDB
+
+    # Load ChromaDB and Fetch Relevant Results
     db = load_chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_function)
-    
-    # Search FAISS index
-    faiss_results = search_faiss(
-        faiss_index_path=FAISS_INDEX_PATH, 
-        query_text=query_text, 
-        embedding_function=embedding_function, 
-        k=k
-    )
-    
-    if not faiss_results:
+    results = db.similarity_search_with_score(query_text, k=k)
+
+    # Return empty list in case of no results found
+    if len(results) == 0 :
+        print(f"\nUnable to find matching results for '{query_text}'")
         return []
     
-    # Unpack results
-    indices, scores = zip(*faiss_results)
-    
-    # Filter by threshold
-    filtered_indices = []
-    filtered_scores = []
-    for i, score in enumerate(scores):
-        if score >= threshold:
-            filtered_indices.append(indices[i])
-            filtered_scores.append(score)
-        else:
-            print(f"Filtered out result with score {score} (below threshold {threshold})")
-    
-    if not filtered_indices:
-        return []
-    
-    # Get document metadata and content
-    docs_metadata = db.get(limit=len(indices), offset=min(indices))
-    doc_ids = docs_metadata.get("ids", [])
-    results = db.get_by_ids(doc_ids)
-    
-    # Format results
     contexts = []
-    for i, result in enumerate(results):
-        if i < len(filtered_scores):
+    # Filter by threshold
+    for doc, _score in results:
+        if _score >= threshold:
             contexts.append({
-                "context": result.page_content,
-                "relevance_score": str(filtered_scores[i])
+                "context": doc.page_content,
+                "relevance_score": str(_score)
             })
-    
+
     return contexts
 
 

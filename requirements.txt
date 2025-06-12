@@ -8,5 +8,4 @@ langchain-core==0.3.65
 sentence-transformers==4.1.0 
 langchain-chroma==0.2.4 
 numpy==2.3.0 
-faiss-cpu==1.11.0 
 einops==0.8.1

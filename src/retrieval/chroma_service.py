@@ -5,7 +5,7 @@ ChromaDB operations for vector storage and retrieval.
 from langchain_chroma import Chroma
 
 
-def load_chroma(persist_directory, embedding_function=None):
+def load_chroma(persist_directory, embedding_function):
     """
     Load a ChromaDB collection from disk.
     
@@ -26,7 +26,7 @@ def load_chroma(persist_directory, embedding_function=None):
         raise
 
 
-def save_to_chroma(persist_directory, chunks, embedding_function=None):
+def save_to_chroma(persist_directory, chunks, embedding_function):
     """
     Save documents to a ChromaDB collection.
     
@@ -37,7 +37,7 @@ def save_to_chroma(persist_directory, chunks, embedding_function=None):
     """
     try:
         # Create a new ChromaDB collection
-        db = Chroma.from_documents(
+        Chroma.from_documents(
             documents=chunks,
             embedding=embedding_function,
             persist_directory=persist_directory
