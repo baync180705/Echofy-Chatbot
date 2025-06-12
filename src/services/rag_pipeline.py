@@ -93,6 +93,3 @@ def create_prompt(query_text, contexts):
         Question: {query_text}
     """
     return prompt
-
-if __name__ == "__main__":
-    initialize_database() # Called During Startup
