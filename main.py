@@ -47,7 +47,6 @@ def handleQuery(query: Query):
 
 def orchestratePipeline(query_text):
     """Main function orchestrating the retrieval and generation process."""
-
     # Initialize embedding function
     embedding_function = StellaEmbeddings()
 
